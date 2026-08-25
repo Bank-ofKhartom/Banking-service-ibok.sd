@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>لوحة تحكم الأدمن - iBOK</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+    body { background-color: #f3f4f6; padding: 20px; }
+    .admin-container { max-width: 900px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    h2 { color: #c8102e; margin-bottom: 20px; text-align: center; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { padding: 12px; text-align: center; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
+    th { background-color: #f8fafc; color: #374151; font-weight: 700; }
+    .btn-approve { background-color: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    .btn-reject { background-color: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    .status-badge { padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: bold; }
+    .status-pending { background: #fef3c7; color: #d97706; }
+    .status-approved { background: #d1fae5; color: #059669; }
+  </style>
+</head>
+<body>
+
+  <div class="admin-container">
+    <h2><i class="fa-solid fa-user-shield"></i> لوحة تحكم الإدارة - طلبات التوثيق</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>معرف المستخدم (User ID)</th>
+          <th>رقم التواصل</th>
+          <th>الحالة الحالية</th>
+          <th>الإجراءات</th>
+        </tr>
+      </thead>
+      <tbody id="requestsTableBody">
+        <!-- يتم تعبئتها ديناميكياً -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // تحميل الطلبات الواردة وعرضها
+    function loadAdminRequests() {
+      const tbody = document.getElementById('requestsTableBody');
+      tbody.innerHTML = '';
+      
+      // جلب الطلبات المخزنة (يمكن ربطها بقاعدة بيانات لاحقاً)
+      let requests = JSON.parse(localStorage.getItem('ibok_pending_requests')) || [];
+
+      if (requests.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="color: #6b7280; padding: 20px;">لا توجد طلبات توثيق معلقة حالياً.</td></tr>`;
+        return;
+      }
+
+      requests.forEach((req, index) => {
+        let tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><b>${req.userId}</b></td>
+          <td>${req.contact}</td>
+          <td><span class="status-badge ${req.approved ? 'status-approved' : 'status-pending'}">${req.approved ? 'موثق' : 'قيد الانتظار'}</span></td>
+          <td>
+            ${!req.approved ? `<button class="btn-approve" onclick="approveUser('${req.userId}')">موافقة ✅</button>` : 'تمت الموافقة'}
+            <button class="btn-reject" onclick="deleteRequest(${index})">حذف ❌</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function approveUser(userId) {
+      let requests = JSON.parse(localStorage.getItem('ibok_pending_requests')) || [];
+      requests = requests.map(r => {
+        if (r.userId === userId) r.approved = true;
+        return r;
+      });
+      localStorage.setItem('ibok_pending_requests', JSON.stringify(requests));
+      
+      // تحديث حالة المستخدم في النظام المحلي
+      localStorage.setItem(`verified_${userId}`, 'true');
+      alert(`تمت الموافقة على حساب المستخدم: ${userId} بنجاح!`);
+      loadAdminRequests();
+    }
+
+    function deleteRequest(index) {
+      let requests = JSON.parse(localStorage.getItem('ibok_pending_requests')) || [];
+      requests.splice(index, 1);
+      localStorage.setItem('ibok_pending_requests', JSON.stringify(requests));
+      loadAdminRequests();
+    }
+
+    window.onload = loadAdminRequests;
+  </script>
+</body>
+</html>
